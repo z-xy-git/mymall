@@ -29,10 +29,13 @@
     mounted(){
       // 创建一个 BScroll 对象
       this.scroll = new BScroll(this.$refs.wrapper,{
+
         // click 属性表示被 better-scroll 包裹的滚动区域内的标签或者组件的点击事件是否有效
         click: true,
 
-        // probeType 取值为 0/1 表示不监听滚动位置 2 表示手指松开的时候 3 表示屏幕停止的时候
+        // probeType 取值为 0/1 表示不侦测滚动位置
+        // 2 表示在手指松开之前侦测，手指松开之后惯性滚动的过程不侦测
+        // 3 表示只要有滚动就侦测
         probeType: this.probeType,
 
         pullUpLoad: this.pullUpLoad
@@ -41,17 +44,21 @@
       this.scroll.on('scroll',(position) => {
         this.$emit('isScroll',position)
       })
-      // 监听上拉事件
+      // 监听是否滚动到底部
       this.scroll.on('pullingUp',() => {
         this.$emit('isPullingUp')
       })
     },
     methods: {
+      // 对 scroll 对象的方法进行再次封装
       scrollTo(x,y,time) {
-        this.scroll.scrollTo(x,y,time)
+        this.scroll && this.scroll.scrollTo(x,y,time)
       },
       finishPullUp(){
-        this.scroll.finishPullUp()
+        this.scroll && this.scroll.finishPullUp()
+      },
+      refresh(){
+        this.scroll && this.scroll.refresh()
       }
     }
   }

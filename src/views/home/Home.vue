@@ -7,12 +7,13 @@
             @isScroll="contentScroll"
             :pull-up-load="true"
             @isPullingUp="loadMore">
-      <home-swiper :banners="banners"></home-swiper>
+      <home-swiper :banners="banners" @swiperImageLoad="swiperImgLoad"></home-swiper>
       <recommend-view :recommends="recommends"></recommend-view>
       <feature-view/>
       <tab-control :titles="['流行','新款','精选']"
-                    class="tab-control"
-                    @tabClick="tabClick"/>
+                    @tabClick="tabClick"
+                    ref="tabControl"
+                    :class="{fixed: isTabControlFixed}" />
       <goods-list :goods="goods[currentType].list"></goods-list>
     </scroll>
     <back-top @click.native="backTopClick" v-show="isShowBackTop"/>
@@ -34,6 +35,8 @@
 
   // 导入网络请求相关的功能函数
   import {getHomeMultidata, getHomeGoods} from 'network/home'
+
+  import {debounce} from '@/common/utils'
 
   export default {
     name: "Home",
@@ -57,7 +60,10 @@
           'sell': {page: 0, list: []}
         },
         currentType: 'pop',
-        isShowBackTop: false
+        isShowBackTop: false,
+        tabControlOffsetTop: 0,
+        isTabControlFixed: false,
+        saveY: 0
       }
     },
     created() {
@@ -68,6 +74,21 @@
       this.getHomeGoods('pop')
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
+    },
+    mounted() {
+      // 监听 GoodsListItem 组件中的 图片加载情况
+      const refresh = debounce(this.$refs.scroll.refresh,300)
+      this.$bus.$on('itemImageLoad',() =>{
+        refresh()
+      })
+    },
+    activated(){
+      this.$refs.scroll.scrollTo(0,this.saveY,0)
+      this.$refs.scroll.refresh()
+    },
+    deactivated(){
+      // 记录离开组件时滚动的位置
+      this.saveY = this.$refs.scroll.scroll.y
     },
     methods: {
       /*
@@ -87,10 +108,17 @@
         this.$refs.scroll.scrollTo(0,0,500)
       },
       contentScroll(position){
+        // 是否显示回到顶部
         this.isShowBackTop = (-position.y) > 1000
+
+        // tabControl 是否固定定位
+        this.isTabControlFixed = (-position.y) > this.tabControlOffsetTop
       },
       loadMore(){
         this.getHomeGoods(this.currentType)
+      },
+      swiperImgLoad(){
+        this.tabControlOffsetTop = this.$refs.tabControl.$el.offsetTop
       },
 
       /*
@@ -131,10 +159,6 @@
     background-color: #c55;
     color: #fff;
   }
-  .tab-control{
-    position: sticky;
-    top: 44px;
-  }
   .content{
     position: absolute;
     top: 44px;
@@ -142,5 +166,11 @@
     left: 0;
     right: 0;
     overflow: hidden;
+  }
+  .fixed{
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 44px;
   }
 </style>
