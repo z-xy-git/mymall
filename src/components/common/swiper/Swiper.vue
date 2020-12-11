@@ -239,7 +239,7 @@
     margin: 0 5px;
   }
 
-  .indi-item .active {
+  .indi-item.active {
     background-color: rgba(212,62,46,1.0);
   }
 </style>

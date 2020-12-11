@@ -2,6 +2,10 @@
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
 
+    <tab-control :titles="['流行','新款','精选']"
+                 @tabClick="tabClick"
+                 ref="tabControl1"
+                 class="control" v-show="isTabControlFixed"/>
     <scroll class="content" ref="scroll"
             :probeType="3"
             @isScroll="contentScroll"
@@ -12,8 +16,7 @@
       <feature-view/>
       <tab-control :titles="['流行','新款','精选']"
                     @tabClick="tabClick"
-                    ref="tabControl"
-                    :class="{fixed: isTabControlFixed}" />
+                    ref="tabControl2"/>
       <goods-list :goods="goods[currentType].list"></goods-list>
     </scroll>
     <back-top @click.native="backTopClick" v-show="isShowBackTop"/>
@@ -63,6 +66,8 @@
         isShowBackTop: false,
         tabControlOffsetTop: 0,
         isTabControlFixed: false,
+        currentIndex1: 0,
+        currentIndex2: 0,
         saveY: 0
       }
     },
@@ -103,6 +108,8 @@
           case 2: this.currentType = 'sell'
             break
         }
+        this.$refs.tabControl1.currentIndex = index;
+        this.$refs.tabControl2.currentIndex = index;
       },
       backTopClick(){
         this.$refs.scroll.scrollTo(0,0,500)
@@ -118,7 +125,7 @@
         this.getHomeGoods(this.currentType)
       },
       swiperImgLoad(){
-        this.tabControlOffsetTop = this.$refs.tabControl.$el.offsetTop
+        this.tabControlOffsetTop = this.$refs.tabControl2.$el.offsetTop
       },
 
       /*
@@ -167,10 +174,13 @@
     right: 0;
     overflow: hidden;
   }
-  .fixed{
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 44px;
+  .control{
+    position: relative;
   }
+  /*.fixed{*/
+    /*position: fixed;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*top: 44px;*/
+  /*}*/
 </style>
