@@ -41,6 +41,8 @@
     line-height: 40px;
     text-align: center;
     background-color: #fff;
+    /*border-bottom: 2px solid #ddd;*/
+    box-shadow: 0 3px 10px rgba(0,0,0,0.09);
 
     z-index: 2;
   }

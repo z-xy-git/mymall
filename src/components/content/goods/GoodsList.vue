@@ -28,5 +28,6 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    background-color: #eee;
   }
 </style>

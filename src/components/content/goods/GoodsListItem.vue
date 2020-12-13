@@ -38,13 +38,16 @@
 
 <style scoped>
   .goods-item {
-    width: 48%;
     position: relative;
+    width: 48%;
+    background-color: #fff;
+    border: 3px solid #eee;
+    border-radius: 10px;
   }
   .goods-item img {
     width: 100%;
-    border-radius: 5px;
     margin-bottom: 5px;
+    border-radius: 10px;
   }
   .goods-item-description {
     font-size: 13px;

@@ -39,7 +39,8 @@
   // 导入网络请求相关的功能函数
   import {getHomeMultidata, getHomeGoods} from 'network/home'
 
-  import {debounce} from '@/common/utils'
+  // 导入工具类函数
+  import {debounce} from 'common/utils'
 
   export default {
     name: "Home",
@@ -81,7 +82,10 @@
       this.getHomeGoods('sell')
     },
     mounted() {
-      // 监听 GoodsListItem 组件中的 图片加载情况
+      /*
+       * 监听 GoodsListItem 组件中的 图片加载情况
+       * 加载完毕后调用 refresh 重新计算当前可滚动区域的高度
+        */
       const refresh = debounce(this.$refs.scroll.refresh,300)
       this.$bus.$on('itemImageLoad',() =>{
         refresh()
@@ -155,6 +159,7 @@
     position: relative;
     padding-top: 44px;
     height: 100vh;
+    /*background-color: #eee;*/
   }
   .home-nav{
     position: fixed;
