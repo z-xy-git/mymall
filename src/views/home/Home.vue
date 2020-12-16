@@ -4,20 +4,20 @@
 
     <tab-control :titles="['流行','新款','精选']"
                  @tabClick="tabClick"
-                 ref="tabControl1"
+                 ref="topControl"
                  class="control" v-show="isTabControlFixed"/>
     <scroll class="content" ref="scroll"
             :probeType="3"
             @isScroll="contentScroll"
             :pull-up-load="true"
             @isPullingUp="loadMore">
-      <home-swiper :banners="banners" @swiperImageLoad="swiperImgLoad"></home-swiper>
-      <recommend-view :recommends="recommends"></recommend-view>
+      <home-swiper :banners="banners" @swiperImageLoad="swiperImgLoad"/>
+      <recommend-view :recommends="recommends"/>
       <feature-view/>
       <tab-control :titles="['流行','新款','精选']"
                     @tabClick="tabClick"
-                    ref="tabControl2"/>
-      <goods-list :goods="goods[currentType].list"></goods-list>
+                    ref="contentControl"/>
+      <goods-list :goods="goods[currentType].list"/>
     </scroll>
     <back-top @click.native="backTopClick" v-show="isShowBackTop"/>
   </div>
@@ -85,14 +85,14 @@
       /*
        * 监听 GoodsListItem 组件中的 图片加载情况
        * 加载完毕后调用 refresh 重新计算当前可滚动区域的高度
-        */
-      const refresh = debounce(this.$refs.scroll.refresh,300)
+       */
+      const newRefresh = debounce(this.$refs.scroll.refresh,300);
       this.$bus.$on('itemImageLoad',() =>{
-        refresh()
-      })
+        newRefresh()
+      });
     },
     activated(){
-      this.$refs.scroll.scrollTo(0,this.saveY,0)
+      this.$refs.scroll.scrollTo(0,this.saveY,0);
       this.$refs.scroll.refresh()
     },
     deactivated(){
@@ -112,8 +112,8 @@
           case 2: this.currentType = 'sell'
             break
         }
-        this.$refs.tabControl1.currentIndex = index;
-        this.$refs.tabControl2.currentIndex = index;
+        this.$refs.contentControl.currentIndex = index;
+        this.$refs.topControl.currentIndex = index;
       },
       backTopClick(){
         this.$refs.scroll.scrollTo(0,0,500)
@@ -129,7 +129,7 @@
         this.getHomeGoods(this.currentType)
       },
       swiperImgLoad(){
-        this.tabControlOffsetTop = this.$refs.tabControl2.$el.offsetTop
+        this.tabControlOffsetTop = this.$refs.contentControl.$el.offsetTop
       },
 
       /*
@@ -177,6 +177,7 @@
     bottom: 49px;
     left: 0;
     right: 0;
+    height: calc(100% - 44px - 49px);
     overflow: hidden;
   }
   .control{

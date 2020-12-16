@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper" ref="wrapper">
-    <div class="content">
+    <div>
       <slot></slot>
     </div>
   </div>
@@ -39,7 +39,7 @@
         probeType: this.probeType,
 
         pullUpLoad: this.pullUpLoad
-      })
+      });
       // 监听滚动的位置
       this.scroll.on('scroll',(position) => {
         this.$emit('isScroll',position)

@@ -47,7 +47,8 @@
   .goods-item img {
     width: 100%;
     margin-bottom: 5px;
-    border-radius: 10px;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
   }
   .goods-item-description {
     font-size: 13px;
